@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+source common.sh
+
+# Setup path directory
+path_dir=$(realpath ~/.config/distributer)
+mkdir -p "${path_dir}"
+
+script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
+bases=$(ls -1 $script_dir/bases)
+
+usage() {
+  cat <<EOF
+Usage: $(basename "${BASH_SOURCE[0]}") [OPTIONS] BASE
+
+Script description here.
+
+Available bases:
+
+${bases}
+
+Available options:
+
+-h, --help      Print this help and exit
+EOF
+  exit
+}
+
+parse_params() {
+  # default values of variables set from params
+  while :; do
+    case "${1-}" in
+    -h | --help) usage ;;
+    -?*) die "Unknown option: $1" ;;
+    *) break ;;
+    esac
+    shift
+  done
+
+  base="${1-}"
+  [[ -z "$base" ]] && die "No base given"
+  [[ "$bases" =~ .*^"$base"$.* ]] || die "No such base"
+  shift
+
+  rest=$@
+
+  # check required params and arguments
+  [[ ${#rest} -ne 0 ]] && die "Too many arguments"
+
+  return 0
+}
+
+build_base() {
+  msg "Building ${base} package\n"
+
+  docker build --tag "distributer-${base}-base" "$script_dir/bases/${base}"
+  ln -sf "${script_dir}/executer.sh" "${path_dir}/${base}"
+  chmod +x "${path_dir}/${base}"
+}
+
+parse_params "$@"
+
+build_base
