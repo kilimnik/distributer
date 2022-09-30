@@ -4,7 +4,7 @@ install_inner() {
 
   local packages=$@
 
-  docker build --tag "distributer-${base}${name}" - <<EOF
+  docker build --no-cache --tag "distributer-${base}${name}" - <<EOF
 FROM "distributer-${base}-base"
 
 RUN yay -Syu --noconfirm
@@ -18,5 +18,5 @@ run_inner() {
 
   local command=$@
 
-  x11docker --quiet --clipboard=yes --gpu --printer --pulseaudio --webcam --network --auto --user=RETAIN "distributer-${base}-${image}" -- "${command}"
+  x11docker --stdin --clipboard=yes --sudouser --gpu --printer --pulseaudio --webcam --network --auto --user=RETAIN "distributer-${base}-${image}" -- ${command}
 }

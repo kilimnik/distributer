@@ -53,7 +53,7 @@ parse_params() {
 build_base() {
   msg "Building ${base} package\n"
 
-  docker build --tag "distributer-${base}-base" "$script_dir/bases/${base}"
+  docker build --no-cache --tag "distributer-${base}-base" "$script_dir/bases/${base}"
   ln -sf "${script_dir}/executer.sh" "${path_dir}/${base}"
   chmod +x "${path_dir}/${base}"
 }
