@@ -64,6 +64,7 @@ Script description here.
 
 Available options:
 
+-v, --verbose   Verbose execution
 -h, --help      Print this help and exit
 EOF
     exit
@@ -71,8 +72,11 @@ EOF
 
   parse_params() {
     # default values of variables set from params
+    verbose=false
+
     while :; do
       case "${1-}" in
+      -v | --verbose) verbose=true ;;
       -h | --help) usage ;;
       -?*) die "Unknown option: $1" ;;
       *) break ;;

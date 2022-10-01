@@ -18,5 +18,11 @@ run_inner() {
 
   local command=$@
 
-  x11docker --stdin --clipboard=yes --sudouser --gpu --printer --pulseaudio --webcam --network --auto --user=RETAIN "distributer-${base}-${image}" -- ${command}
+
+  if $verbose 
+  then
+      x11docker --stdin --clipboard=yes --sudouser --gpu --printer --pulseaudio --webcam --network --auto --user=RETAIN "distributer-${base}-${image}" -- ${command}
+  else
+      x11docker --quiet --stdin --clipboard=yes --sudouser --gpu --printer --pulseaudio --webcam --network --auto --user=RETAIN "distributer-${base}-${image}" -- ${command}
+  fi
 }
