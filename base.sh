@@ -64,6 +64,7 @@ Script description here.
 
 Available options:
 
+-s, --share     Share host file or folder
 -v, --verbose   Verbose execution
 -h, --help      Print this help and exit
 EOF
@@ -73,9 +74,14 @@ EOF
   parse_params() {
     # default values of variables set from params
     verbose=false
+    extra_args=""
 
     while :; do
       case "${1-}" in
+      -s | --share)
+        extra_args="${extra_args} --share=${2-}"
+        shift
+        ;;
       -v | --verbose) verbose=true ;;
       -h | --help) usage ;;
       -?*) die "Unknown option: $1" ;;
@@ -83,6 +89,11 @@ EOF
       esac
       shift
     done
+
+    if ! $verbose
+    then
+      extra_args="${extra_args} --quiet"
+    fi
 
     image="${1-}"
     [[ -z "${image-}" ]] && die "Missing required parameter: image"

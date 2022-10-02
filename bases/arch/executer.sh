@@ -18,11 +18,7 @@ run_inner() {
 
   local command=$@
 
+  echo "$extra_args"
 
-  if $verbose 
-  then
-      x11docker --stdin --clipboard=yes --sudouser --gpu --printer --pulseaudio --webcam --network --auto --user=RETAIN "distributer-${base}-${image}" -- ${command}
-  else
-      x11docker --quiet --stdin --clipboard=yes --sudouser --gpu --printer --pulseaudio --webcam --network --auto --user=RETAIN "distributer-${base}-${image}" -- ${command}
-  fi
+  x11docker $extra_args --stdin --clipboard=yes --sudouser --gpu --printer --pulseaudio --webcam --network --auto --user=RETAIN "distributer-${base}-${image}" -- ${command}
 }
